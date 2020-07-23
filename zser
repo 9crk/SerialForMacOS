@@ -1,0 +1,23 @@
+#!/bin/bash
+echo "This is a tool for macos. by 9crk 2020-07-23"
+i=0
+ls -1 /dev/|grep "tty\."|grep -v "Blue\|Open\|AirPod"| while read line
+do
+	i=`expr $i + 1`
+	echo "$i:"$line
+done
+i=`ls -1 /dev/|grep "tty\."|grep -v "Blue\|Open\|AirPod"|wc -l`
+if [ $i == 0 ];then
+	echo "no device found"
+	exit 0
+fi
+echo "Input ~. to exit the terminal\n"
+if [ $i == 1 ];then
+	port=`ls -1 /dev/|grep "tty\."|grep -v "Blue\|Open\|AirPod"`
+	sudo cu -s 115200 -l $port 
+else
+	read -p "Enter which device > " id
+	echo "$id"
+	port=`ls -1 /dev/|grep "tty\."|grep -v "Blue\|Open\|AirPod"|head -n $id|tail -n 1`
+	sudo cu -s 115200 -l $port
+fi
